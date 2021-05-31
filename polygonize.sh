@@ -56,7 +56,7 @@ function single_file() {
 
 # test chunks in serial
 function in_serial() {
-    ./split.sh $RASTER $XCHUNKS $YCHUNKS
+    split.sh $RASTER $XCHUNKS $YCHUNKS
 
     for x in $(eval echo {0..$(($XCHUNKS-1))}); do
         for y in $(eval echo {0..$(($YCHUNKS-1))}); do
@@ -69,7 +69,7 @@ function in_serial() {
 
 # test chunks in parallel using Pool
 function in_parallel() {
-    ./split.sh $RASTER $XCHUNKS $YCHUNKS
+    split.sh $RASTER $XCHUNKS $YCHUNKS
 
     python -c "if True:
         from multiprocessing import Pool
@@ -112,8 +112,9 @@ function main() {
     YCHUNKS=8
 
     # make VRT, white=nodata
+    set +x
     gdal_translate -q -a_nodata 255 -of VRT $INPUT $RASTER
-
+    set -x
     # single
     if [[ $METHOD = 'all' ]] || [[ $METHOD = 'single' ]]; then
         echo "Testing $INPUT as a single file:"
